@@ -12,6 +12,7 @@ export interface Post {
 
 export interface User {
   username: string|undefined;
+  name: string|undefined;
   password: string
   avatar: string;
   // isFollowing: boolean;
@@ -33,7 +34,7 @@ interface AuthStore {
   createPost2: (message: string) => void;
   deletePost: (postId: string) => void;
   editPost: (postId: string, message: string) => void;
-  updateProfile: (newusername: string, avatar?: string) => void;
+  updateProfile: (name: string, avatar?: string) => void;
 }
 
 // Helper function to convert File to base64
@@ -55,6 +56,7 @@ export const useStore = create<AuthStore>()(
       users: [
         {
           username: 'a',
+          name: 'a',
           password: 'a',
           avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
@@ -63,6 +65,7 @@ export const useStore = create<AuthStore>()(
         },
         {
           username: 'b',
+          name: 'b',
           password: 'b',
           avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
@@ -71,6 +74,7 @@ export const useStore = create<AuthStore>()(
         },
         {
           username: 'c',
+          name: 'c',
           password: 'c',
           avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
@@ -90,6 +94,7 @@ export const useStore = create<AuthStore>()(
       signup: (username, password) => {
         const newUser = {
           username,
+          name : username,
           password,
           avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
@@ -233,13 +238,13 @@ export const useStore = create<AuthStore>()(
         });
       },
 
-      updateProfile:(username: string, avatar?: string) => {
+      updateProfile:(name: string, avatar?: string) => {
         const temp =  get().currentUser.username
         set({
-          currentUser: { ...get().currentUser, username, avatar},
+          currentUser: { ...get().currentUser, name, avatar},
           users: get().users.map((user) => {
             if (user.username === temp) {
-              return { ...user, username, avatar };
+              return { ...user, name, avatar };
             }
             return user;
           }),

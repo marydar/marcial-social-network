@@ -38,7 +38,7 @@ export default function ProfilePage() {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [editProfileData, setEditProfileData] = useState({
-    username: currentUser?.username || "",
+    name: currentUser?.name || "",
     avatar: currentUser?.avatar || ""
   });
   const [followers, setFollowers] = useState<User[]>([]);
@@ -93,11 +93,11 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = () => {
     updateProfile(
-      editProfileData.username,
+      editProfileData.name,
       editProfileData.avatar
     );
     setShowEditProfile(false);
-    setEditProfileData({ username: "", avatar: null });
+    setEditProfileData({ name: "", avatar: null });
     if (profileImageInputRef.current) {
       profileImageInputRef.current.value = "";
     }
@@ -136,6 +136,7 @@ export default function ProfilePage() {
             />
           </div>
           <h1 className="text-2xl font-bold">{currentUser.username}</h1>
+          <p className="text-sm text-muted-foreground">{currentUser.name}</p>
           <div className="flex space-x-8">
             <Dialog open={showFollowers} onOpenChange={setShowFollowers}>
               <DialogTrigger asChild>
@@ -212,10 +213,10 @@ export default function ProfilePage() {
                 </DialogHeader>
                 <div className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Username</label>
+                    <label className="text-sm font-medium">Name</label>
                     <Input
-                      value={editProfileData.username}
-                      onChange={(e) => setEditProfileData(prev => ({ ...prev, username: e.target.value }))}
+                      value={editProfileData.name}
+                      onChange={(e) => setEditProfileData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Enter new username"
                     />
                   </div>
