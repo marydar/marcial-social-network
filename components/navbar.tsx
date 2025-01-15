@@ -20,7 +20,7 @@ export function Navbar() {
     <nav className="border-b">
       <div className="flex items-center justify-between max-w-6xl mx-auto px-4 py-2">
         <Link href="/" className="text-xl font-bold">
-          InstagramClone
+          Marcial
         </Link>
         
         <div className="flex items-center space-x-4">
