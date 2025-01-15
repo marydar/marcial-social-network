@@ -1,6 +1,6 @@
-import { stat } from "node:fs";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { stat } from 'node:fs';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface Post {
   id: string;
@@ -11,15 +11,17 @@ export interface Post {
 }
 
 export interface User {
-  username: string | undefined;
-  password: string;
+  username: string|undefined;
+  password: string
   avatar: string;
-  followings: string[] | undefined;
-  followers: string[] | undefined;
+  // isFollowing: boolean;
+  followings: string[]|undefined;
+  followers: string[]|undefined;
   posts: Post[];
 }
 
 interface AuthStore {
+  isLoggedIn: "true" | "false" | "loading";
   currentUser: User | null;
   users: User[];
   login: (username: string, password: string) => void;
@@ -27,61 +29,61 @@ interface AuthStore {
   logout: () => void;
   deleteAccount: () => void;
   toggleFollow: (userId: string) => void;
-  createPost: (message: string, imageFile?: File) => void;
+  createPost: (message: string, imageUrl?: string) => void;
+  createPost2: (message: string) => void;
   deletePost: (postId: string) => void;
   editPost: (postId: string, message: string) => void;
-  updateProfile: (username: string, avatarFile?: File) => void;
+  updateProfile: (newusername: string, avatar?: string) => void;
 }
 
+// Helper function to convert File to base64
 const fileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
+    reader.onerror = error => reject(error);
   });
 };
 
 export const useStore = create<AuthStore>()(
   persist(
     (set, get) => ({
+      isLoggedIn: "loading",
       currentUser: null,
 
       users: [
         {
-          username: "a",
-          password: "a",
-          avatar:
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+          username: 'a',
+          password: 'a',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
           followings: [],
-          posts: [],
+          posts: [],  
         },
         {
-          username: "b",
-          password: "b",
-          avatar:
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+          username: 'b',
+          password: 'b',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
           followings: [],
-          posts: [],
+          posts: [],  
         },
         {
-          username: "c",
-          password: "c",
-          avatar:
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+          username: 'c',
+          password: 'c',
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
           followings: [],
-          posts: [],
+          posts: [],  
         },
+      
       ],
 
       login: (username, password) => {
-        set({
-          currentUser: get().users.find(
-            (u) => u.username === username && u.password === password
-          ),
+        set({ 
+          isLoggedIn: "true",
+          currentUser: get().users.find((u) => u.username === username && u.password === password),
         });
       },
 
@@ -89,49 +91,48 @@ export const useStore = create<AuthStore>()(
         const newUser = {
           username,
           password,
-          avatar:
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
           followers: [],
           followings: [],
           posts: [],
         };
-        set({
+        set({ 
+          isLoggedIn: "true",
           users: [...get().users, newUser],
           currentUser: newUser,
         });
       },
 
       logout: () => {
-        set({ currentUser: null });
+        set({ 
+          isLoggedIn: "false",
+          currentUser: null,
+         });
       },
 
       deleteAccount: () => {
-        set({
+        set({ 
+          isLoggedIn: "false",
           currentUser: null,
-          users: get().users.filter(
-            (u) => u.username !== get().currentUser?.username
-          ),
-        });
+          users: get().users.filter((u) => u.username !== get().currentUser?.username)
+         });
       },
 
-      toggleFollow: (username: string) => {
-        //list of followers of user with username  : username
-        let tempFollowers = [];
+      toggleFollow: (username : string) => {
+        //if current user is following user with username remove current user from that users follwers list and remove that user from current users following list
+        let tempFollowers = []
         get().users.forEach((user) => {
           if (user.username === username) {
-            tempFollowers = user.followers;
+            tempFollowers = user.followers
           }
-        });
-        //if current user is following user with username remove current user from that users follwers list and remove that user from current users following list
+        })
         if (tempFollowers.includes(get().currentUser?.username)) {
           set({
             users: get().users.map((user) => {
               if (user.username === username) {
                 return {
                   ...user,
-                  followers: user.followers.filter(
-                    (follower) => follower !== get().currentUser?.username
-                  ),
+                  followers: user.followers.filter((follower) => follower !== get().currentUser?.username),
                 };
               }
               return user;
@@ -153,29 +154,42 @@ export const useStore = create<AuthStore>()(
         }
       },
 
-      createPost: async (message, imageFile) => {
-        const newPost: Post = {
+      createPost:  (message, imageUrl) => {
+        const newPost:Post = {
           id: Date.now().toString(),
           userId: get().currentUser?.username,
           message,
-          imageUrl: imageFile ? await fileToBase64(imageFile) : undefined,
+          imageUrl,
           createdAt: new Date().toISOString(),
         };
         set({
+          currentUser: { ...get().currentUser, posts: [newPost, ...get().currentUser.posts]},
           users: get().users.map((user) => {
             if (user.username === get().currentUser?.username) {
               return {
                 ...user,
-                posts: [...user.posts, newPost],
+                posts: [newPost, ...user.posts],
               };
             }
             return user;
           }),
         });
       },
+      createPost2:(message: string)=> {
+        const post:Post = {
+          id: Date.now().toString(),
+          userId: get().currentUser?.username,
+          message,
+          createdAt: new Date().toISOString(),
+          imageUrl: undefined,
+        };
+        set({
+          currentUser: { ...get().currentUser, posts: [...get().currentUser.posts, post]}
+        })},
 
       deletePost: (postId) => {
         set({
+          currentUser: { ...get().currentUser, posts: get().currentUser.posts.filter((post) => post.id !== postId)},
           users: get().users.map((user) => {
             if (user.username === get().currentUser?.username) {
               return {
@@ -190,6 +204,15 @@ export const useStore = create<AuthStore>()(
 
       editPost: (postId, message) => {
         set({
+          currentUser: { ...get().currentUser, posts: get().currentUser.posts.map((post) => {
+            if (post.id === postId) {
+              return {
+                ...post,
+                message,
+              };
+            }
+            return post;
+          })},
           users: get().users.map((user) => {
             if (user.posts.find((post) => post.id === postId)) {
               return {
@@ -210,25 +233,21 @@ export const useStore = create<AuthStore>()(
         });
       },
 
-      updateProfile: async (newusername, avatarFile) => {
-        
+      updateProfile:(username: string, avatar?: string) => {
+        const temp =  get().currentUser.username
         set({
+          currentUser: { ...get().currentUser, username, avatar},
           users: get().users.map((user) => {
-            if (user.username === get().currentUser?.username) {
-              return {
-                ...user,
-                newusername,
-                // avatar: avatarFile ? await fileToBase64(avatarFile) : user.avatar,
-              };
+            if (user.username === temp) {
+              return { ...user, username, avatar };
             }
             return user;
           }),
-        });
-      
+        })
       },
     }),
     {
-      name: "instagram-store",
+      name: 'instagram-store',
     }
   )
 );
