@@ -135,8 +135,8 @@ export default function ProfilePage() {
               priority
             />
           </div>
-          <h1 className="text-2xl font-bold">{currentUser.username}</h1>
-          <p className="text-sm text-muted-foreground">{currentUser.name}</p>
+          <h1 className="text-2xl font-bold">{currentUser.name}</h1>
+          <p className="text-sm text-muted-foreground">{currentUser.username}</p>
           <div className="flex space-x-8">
             <Dialog open={showFollowers} onOpenChange={setShowFollowers}>
               <DialogTrigger asChild>
