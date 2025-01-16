@@ -1,6 +1,7 @@
 import { stat } from 'node:fs';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { Graph } from './graph';
 
 export interface Post {
   id: string;
@@ -15,7 +16,6 @@ export interface User {
   name: string|undefined;
   password: string
   avatar: string;
-  // isFollowing: boolean;
   followings: string[]|undefined;
   followers: string[]|undefined;
   posts: Post[];
@@ -25,6 +25,7 @@ interface AuthStore {
   isLoggedIn: "true" | "false" | "loading";
   currentUser: User | null;
   users: User[];
+  usersGraph: Graph;
   login: (username: string, password: string) => void;
   signup: (username: string, password: string) => void;
   logout: () => void;
@@ -35,6 +36,7 @@ interface AuthStore {
   deletePost: (postId: string) => void;
   editPost: (postId: string, message: string) => void;
   updateProfile: (name: string, avatar?: string) => void;
+  // getSuggestions: () => void;
 }
 
 // Helper function to convert File to base64
@@ -52,6 +54,7 @@ export const useStore = create<AuthStore>()(
     (set, get) => ({
       isLoggedIn: "loading",
       currentUser: null,
+      // usersGraph: new Graph(),
 
       users : [
         {
@@ -111,6 +114,69 @@ export const useStore = create<AuthStore>()(
     
       
       ],
+      usersGraph: (() => {
+        const graph = new Graph();
+        const initialUsers = [
+          {
+            username: 'a',
+            name: 'A',
+            password: 'a',
+            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+          {
+            username: 'jane_smith',
+            name: 'Jane Smith',
+            password: 'password456',
+            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+          {
+            username: 'michael_brown',
+            name: 'Michael Brown',
+            password: 'password789',
+            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+          {
+            username: 'emily_jones',
+            name: 'Emily Jones',
+            password: 'password101',
+            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+          {
+            username: 'david_wilson',
+            name: 'David Wilson',
+            password: 'password202',
+            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+          {
+            username: 'sarah_davis',
+            name: 'Sarah Davis',
+            password: 'password303',
+            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            followers: [],
+            followings: [],
+            posts: [],
+          },
+        ];
+
+        initialUsers.forEach((user) => graph.addNode(user)); // Populate the graph
+        return graph;
+      })(),
+
 
       login: (username, password) => {
         set({ 
@@ -129,11 +195,23 @@ export const useStore = create<AuthStore>()(
           followings: [],
           posts: [],
         };
-        set({ 
-          isLoggedIn: "true",
-          users: [...get().users, newUser],
-          currentUser: newUser,
+        set((state) => {
+          state.usersGraph.addNode(newUser);
+      
+          return {
+            isLoggedIn: "true",
+            users: [...get().users, newUser],
+            currentUser: newUser,
+          };
         });
+        console.log("graph after add", get().usersGraph.nodes);
+        
+        // set({ 
+        //   isLoggedIn: "true",
+        //   users: [...get().users, newUser],
+        //   currentUser: newUser,
+        //   // addUserToGraph(newUser),
+        // });
       },
 
       logout: () => {
@@ -144,11 +222,23 @@ export const useStore = create<AuthStore>()(
       },
 
       deleteAccount: () => {
-        set({ 
-          isLoggedIn: "false",
-          currentUser: null,
-          users: get().users.filter((u) => u.username !== get().currentUser?.username)
-         });
+        const temp = get().currentUser?.username;
+        set((state) => {
+          state.usersGraph.removeNode(temp);
+      
+          return {
+            isLoggedIn: "false",
+            currentUser: null,
+            users: get().users.filter((u) => u.username !== get().currentUser?.username)
+         };
+        });
+        console.log("graph after delete", get().usersGraph.nodes);
+
+        // set({ 
+        //   isLoggedIn: "false",
+        //   currentUser: null,
+        //   users: get().users.filter((u) => u.username !== get().currentUser?.username)
+        //  });
       },
 
       toggleFollow: (username : string) => {
