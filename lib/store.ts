@@ -1,7 +1,7 @@
 import { stat } from "node:fs";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Graph } from "./graph";
+import { Graph, getSuggestions } from "./graph";
 
 export interface Post {
   id: string;
@@ -25,6 +25,7 @@ interface AuthStore {
   isLoggedIn: "true" | "false" | "loading";
   currentUser: User | null;
   users: User[];
+  currentSuggestions: User[];
   usersGraph: Graph;
   login: (username: string, password: string) => void;
   signup: (username: string, password: string) => void;
@@ -54,6 +55,7 @@ export const useStore = create<AuthStore>()(
     (set, get) => ({
       isLoggedIn: "loading",
       currentUser: null,
+      currentSuggestions: [],
       // usersGraph: new Graph(),
 
       users: [
@@ -188,6 +190,11 @@ export const useStore = create<AuthStore>()(
       })(),
 
       login: (username, password) => {
+        set((state) => ({
+          currentSuggestions: getSuggestions(state.usersGraph, username),
+        }));
+        console.log("suggs",get().currentSuggestions);
+        
         set({
           isLoggedIn: "true",
           currentUser: get().users.find(

@@ -66,4 +66,35 @@ class GraphNode {
       return false;
     }
   }
+  export const getSuggestions = (graph: Graph, username: string) => {
+    console.log("graph", graph.nodes);
+    const suggestions = [];
+    const user = graph.nodes.find((node) => node.value.username === username);
+    graph.nodes.forEach((node) => {
+      let mutualNeighbors = 0;
+      console.log("nodeha", node.value.username);
+      if (node.neighbors.length >= 0 && node !== user) {
+        // console.log("node", node.value.username);
+        node.neighbors.forEach((neighbor) => {
+          if (neighbor.value.username === username) {
+            mutualNeighbors++;
+          }
+        });
+        console.log("mutualNeighbors", mutualNeighbors);
+        
+        console.log("neigh", node.neighbors, "AND", user.neighbors);
+        let score = mutualNeighbors / (node.neighbors.length +  user.neighbors.length);
+        console.log("score: ",score,"with", node.value.username);
+        console.log("all", node.neighbors.length +  user.neighbors.length);
+        console.log("mutual: ",mutualNeighbors);
+        
+        if(score > 0 && score < 1){
+            suggestions.push(node.value);
+        }
+      }
+    });
+    return suggestions;
+    
+  };
+
   
