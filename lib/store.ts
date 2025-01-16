@@ -1,7 +1,7 @@
-import { stat } from 'node:fs';
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { Graph } from './graph';
+import { stat } from "node:fs";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { Graph } from "./graph";
 
 export interface Post {
   id: string;
@@ -12,12 +12,12 @@ export interface Post {
 }
 
 export interface User {
-  username: string|undefined;
-  name: string|undefined;
-  password: string
+  username: string | undefined;
+  name: string | undefined;
+  password: string;
   avatar: string;
-  followings: string[]|undefined;
-  followers: string[]|undefined;
+  followings: string[] | undefined;
+  followers: string[] | undefined;
   posts: Post[];
 }
 
@@ -45,7 +45,7 @@ const fileToBase64 = (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 };
 
@@ -56,117 +56,127 @@ export const useStore = create<AuthStore>()(
       currentUser: null,
       // usersGraph: new Graph(),
 
-      users : [
+      users: [
         {
-            username: 'a',
-            name: 'A',
-            password: 'a',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "a",
+          name: "A",
+          password: "a",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
         {
-            username: 'jane_smith',
-            name: 'Jane Smith',
-            password: 'password456',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "jane_smith",
+          name: "Jane Smith",
+          password: "password456",
+          avatar:
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
         {
-            username: 'michael_brown',
-            name: 'Michael Brown',
-            password: 'password789',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "michael_brown",
+          name: "Michael Brown",
+          password: "password789",
+          avatar:
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
         {
-            username: 'emily_jones',
-            name: 'Emily Jones',
-            password: 'password101',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "emily_jones",
+          name: "Emily Jones",
+          password: "password101",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
         {
-            username: 'david_wilson',
-            name: 'David Wilson',
-            password: 'password202',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "david_wilson",
+          name: "David Wilson",
+          password: "password202",
+          avatar:
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
         {
-            username: 'sarah_davis',
-            name: 'Sarah Davis',
-            password: 'password303',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
-            followers: [],
-            followings: [],
-            posts: [],
+          username: "sarah_davis",
+          name: "Sarah Davis",
+          password: "password303",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
         },
-    
-      
       ],
       usersGraph: (() => {
         const graph = new Graph();
         const initialUsers = [
           {
-            username: 'a',
-            name: 'A',
-            password: 'a',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            username: "a",
+            name: "A",
+            password: "a",
+            avatar:
+              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
           },
           {
-            username: 'jane_smith',
-            name: 'Jane Smith',
-            password: 'password456',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            username: "jane_smith",
+            name: "Jane Smith",
+            password: "password456",
+            avatar:
+              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
           },
           {
-            username: 'michael_brown',
-            name: 'Michael Brown',
-            password: 'password789',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            username: "michael_brown",
+            name: "Michael Brown",
+            password: "password789",
+            avatar:
+              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
           },
           {
-            username: 'emily_jones',
-            name: 'Emily Jones',
-            password: 'password101',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            username: "emily_jones",
+            name: "Emily Jones",
+            password: "password101",
+            avatar:
+              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
           },
           {
-            username: 'david_wilson',
-            name: 'David Wilson',
-            password: 'password202',
-            avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop',
+            username: "david_wilson",
+            name: "David Wilson",
+            password: "password202",
+            avatar:
+              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
           },
           {
-            username: 'sarah_davis',
-            name: 'Sarah Davis',
-            password: 'password303',
-            avatar: 'https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop',
+            username: "sarah_davis",
+            name: "Sarah Davis",
+            password: "password303",
+            avatar:
+              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
@@ -177,27 +187,29 @@ export const useStore = create<AuthStore>()(
         return graph;
       })(),
 
-
       login: (username, password) => {
-        set({ 
+        set({
           isLoggedIn: "true",
-          currentUser: get().users.find((u) => u.username === username && u.password === password),
+          currentUser: get().users.find(
+            (u) => u.username === username && u.password === password
+          ),
         });
       },
 
       signup: (username, password) => {
         const newUser = {
           username,
-          name : username,
+          name: username,
           password,
-          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
+          avatar:
+            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
         };
         set((state) => {
           state.usersGraph.addNode(newUser);
-      
+
           return {
             isLoggedIn: "true",
             users: [...get().users, newUser],
@@ -205,8 +217,8 @@ export const useStore = create<AuthStore>()(
           };
         });
         console.log("graph after add", get().usersGraph.nodes);
-        
-        // set({ 
+
+        // set({
         //   isLoggedIn: "true",
         //   users: [...get().users, newUser],
         //   currentUser: newUser,
@@ -215,53 +227,68 @@ export const useStore = create<AuthStore>()(
       },
 
       logout: () => {
-        set({ 
+        set({
           isLoggedIn: "false",
           currentUser: null,
-         });
+        });
       },
 
       deleteAccount: () => {
         const temp = get().currentUser?.username;
         set((state) => {
           state.usersGraph.removeNode(temp);
-      
+
           return {
             isLoggedIn: "false",
             currentUser: null,
-            users: get().users.filter((u) => u.username !== get().currentUser?.username)
-         };
+            users: get().users.filter(
+              (u) => u.username !== get().currentUser?.username
+            ),
+          };
         });
         console.log("graph after delete", get().usersGraph.nodes);
 
-        // set({ 
+        // set({
         //   isLoggedIn: "false",
         //   currentUser: null,
         //   users: get().users.filter((u) => u.username !== get().currentUser?.username)
         //  });
       },
 
-      toggleFollow: (username : string) => {
+      toggleFollow: (username: string) => {
         //if current user is following user with username remove current user from that users follwers list and remove that user from current users following list
-        let tempFollowers = []
+        let tempFollowers = [];
         get().users.forEach((user) => {
           if (user.username === username) {
-            tempFollowers = user.followers
+            tempFollowers = user.followers;
           }
-        })
+        });
         if (tempFollowers.includes(get().currentUser?.username)) {
+          const from = get().currentUser.username;
+          set((state) => {
+            state.usersGraph.removeEdge(from, username);
+            return {
+            };
+          });
           set({
             users: get().users.map((user) => {
               if (user.username === username) {
                 return {
                   ...user,
-                  followers: user.followers.filter((follower) => follower !== get().currentUser?.username),
+                  followers: user.followers.filter(
+                    (follower) => follower !== get().currentUser?.username
+                  ),
                 };
               }
               return user;
             }),
           });
         } else {
+          const from = get().currentUser.username;
+          set((state) => {
+            state.usersGraph.addEdge(from, username);
+            return {};
+          });
           //if current user is not following user with username add current user to that users followers list and add that user to current users following list
           set({
             users: get().users.map((user) => {
@@ -277,8 +304,8 @@ export const useStore = create<AuthStore>()(
         }
       },
 
-      createPost:  (message, imageUrl) => {
-        const newPost:Post = {
+      createPost: (message, imageUrl) => {
+        const newPost: Post = {
           id: Date.now().toString(),
           userId: get().currentUser?.username,
           message,
@@ -286,7 +313,10 @@ export const useStore = create<AuthStore>()(
           createdAt: new Date().toISOString(),
         };
         set({
-          currentUser: { ...get().currentUser, posts: [newPost, ...get().currentUser.posts]},
+          currentUser: {
+            ...get().currentUser,
+            posts: [newPost, ...get().currentUser.posts],
+          },
           users: get().users.map((user) => {
             if (user.username === get().currentUser?.username) {
               return {
@@ -298,8 +328,8 @@ export const useStore = create<AuthStore>()(
           }),
         });
       },
-      createPost2:(message: string)=> {
-        const post:Post = {
+      createPost2: (message: string) => {
+        const post: Post = {
           id: Date.now().toString(),
           userId: get().currentUser?.username,
           message,
@@ -307,12 +337,19 @@ export const useStore = create<AuthStore>()(
           imageUrl: undefined,
         };
         set({
-          currentUser: { ...get().currentUser, posts: [...get().currentUser.posts, post]}
-        })},
+          currentUser: {
+            ...get().currentUser,
+            posts: [...get().currentUser.posts, post],
+          },
+        });
+      },
 
       deletePost: (postId) => {
         set({
-          currentUser: { ...get().currentUser, posts: get().currentUser.posts.filter((post) => post.id !== postId)},
+          currentUser: {
+            ...get().currentUser,
+            posts: get().currentUser.posts.filter((post) => post.id !== postId),
+          },
           users: get().users.map((user) => {
             if (user.username === get().currentUser?.username) {
               return {
@@ -327,15 +364,18 @@ export const useStore = create<AuthStore>()(
 
       editPost: (postId, message) => {
         set({
-          currentUser: { ...get().currentUser, posts: get().currentUser.posts.map((post) => {
-            if (post.id === postId) {
-              return {
-                ...post,
-                message,
-              };
-            }
-            return post;
-          })},
+          currentUser: {
+            ...get().currentUser,
+            posts: get().currentUser.posts.map((post) => {
+              if (post.id === postId) {
+                return {
+                  ...post,
+                  message,
+                };
+              }
+              return post;
+            }),
+          },
           users: get().users.map((user) => {
             if (user.posts.find((post) => post.id === postId)) {
               return {
@@ -356,21 +396,29 @@ export const useStore = create<AuthStore>()(
         });
       },
 
-      updateProfile:(name: string, avatar?: string) => {
-        const temp =  get().currentUser.username
+      updateProfile: (name: string, avatar?: string) => {
+        const temp = get().currentUser.username;
         set({
-          currentUser: { ...get().currentUser, name, avatar},
+          currentUser: { ...get().currentUser, name, avatar },
           users: get().users.map((user) => {
             if (user.username === temp) {
               return { ...user, name, avatar };
             }
             return user;
           }),
-        })
+        });
       },
     }),
     {
-      name: 'instagram-store',
+      name: "instagram-store",
+      partialize: (state) => {
+        const { usersGraph, ...rest } = state;
+        return rest;
+      },
     }
+    // {
+    //   name: 'instagram-store',
+
+    // }
   )
 );

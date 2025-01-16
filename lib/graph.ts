@@ -10,6 +10,9 @@ class GraphNode {
     addNeighbor(node: GraphNode) {
       this.neighbors.push(node);
     }
+    removeNeighbor(node: GraphNode) {
+      this.neighbors = this.neighbors.filter((n) => n !== node);
+    }
   }
   export class Graph {
     nodes: GraphNode[];
@@ -29,9 +32,17 @@ class GraphNode {
         }); 
     }
   
-    addEdge(from: GraphNode, to: GraphNode) {
+    addEdge(fromUsername: any, toUsername: any) {
+      const from = this.nodes.find((node) => node.value.username === fromUsername);
+      const to = this.nodes.find((node) => node.value.username === toUsername);
       from.addNeighbor(to);
       to.addNeighbor(from);
+    }
+    removeEdge(fromUsername: any, toUsername: any) {
+      const from = this.nodes.find((node) => node.value.username === fromUsername);
+      const to = this.nodes.find((node) => node.value.username === toUsername);
+      from.removeNeighbor(to);
+      to.removeNeighbor(from);
     }
   
     bfs(start: GraphNode, end: GraphNode) {
