@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function ExplorePage() {
-  const { users, toggleFollow, currentUser, isLoggedIn } = useStore();
+  const { users, toggleFollow, currentUser, isLoggedIn, currentSuggestions } = useStore();
   const router = useRouter();
   useEffect(() => {
     if (isLoggedIn === "false") {
@@ -49,7 +49,7 @@ export default function ExplorePage() {
         <h2 className="text-2xl font-bold mb-4">Suggested for you</h2>
         <ScrollArea className="w-full whitespace-nowrap">
           <div className="flex space-x-4 p-4">
-            {users.map((user) => (
+            {currentSuggestions.map((user) => (
               <div
                 key={user.username}
                 className="flex flex-col items-center space-y-2 w-24"
