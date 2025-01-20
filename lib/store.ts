@@ -1,7 +1,7 @@
 import { stat } from "node:fs";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Graph, getSuggestions } from "./graph";
+import { GraphMatrix } from "./graph";
 
 export interface Post {
   id: string;
@@ -25,8 +25,9 @@ interface AuthStore {
   isLoggedIn: "true" | "false" | "loading";
   currentUser: User | null;
   users: User[];
-  currentSuggestions: User[];
-  usersGraph: Graph;
+  currentSuggestions: string[];
+  currentSuggestionsUsers: User[];
+  usersGraph: GraphMatrix;
   login: (username: string, password: string) => void;
   signup: (username: string, password: string) => void;
   logout: () => void;
@@ -55,6 +56,7 @@ export const useStore = create<AuthStore>()(
     (set, get) => ({
       isLoggedIn: "loading",
       currentUser: null,
+      currentSuggestionsUsers: [],
       currentSuggestions: [],
       // usersGraph: new Graph(),
 
@@ -121,7 +123,7 @@ export const useStore = create<AuthStore>()(
         },
       ],
       usersGraph: (() => {
-        const graph = new Graph();
+        const graph = new GraphMatrix();
         const initialUsers = [
           {
             username: "a",
@@ -185,14 +187,15 @@ export const useStore = create<AuthStore>()(
           },
         ];
 
-        initialUsers.forEach((user) => graph.addNode(user)); // Populate the graph
+        initialUsers.forEach((user) => graph.addNode(user.username)); // Populate the graph
         return graph;
       })(),
 
       login: (username, password) => {
         set((state) => ({
-          currentSuggestions: getSuggestions(state.usersGraph, username),
+          currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
         }));
+
         console.log("suggs",get().currentSuggestions);
         
         set({
@@ -200,6 +203,11 @@ export const useStore = create<AuthStore>()(
           currentUser: get().users.find(
             (u) => u.username === username && u.password === password
           ),
+          
+          // currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
+          // // if length of currentSuggestionsUsers is less than 7 add from users to currentSuggestionsUsers to become length 6 and add the users from currentsuggestions array
+          // currentSuggestionsUsers: get().currentSuggestionsUsers.length < 7 ? [...get().currentSuggestionsUsers, ...get().currentSuggestions.map((username) => get().users.find((u) => u.username === username))] : get().currentSuggestionsUsers,
+
         });
       },
 
@@ -215,22 +223,18 @@ export const useStore = create<AuthStore>()(
           posts: [],
         };
         set((state) => {
-          state.usersGraph.addNode(newUser);
-
-          return {
-            isLoggedIn: "true",
-            users: [...get().users, newUser],
-            currentUser: newUser,
-          };
+          state.usersGraph.addNode(newUser.username);
+          return {};
         });
-        console.log("graph after add", get().usersGraph.nodes);
-
-        // set({
-        //   isLoggedIn: "true",
-        //   users: [...get().users, newUser],
-        //   currentUser: newUser,
-        //   // addUserToGraph(newUser),
-        // });
+        set((state) => ({
+          currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
+        }));
+        set({
+          isLoggedIn: "true",
+          users: [...get().users, newUser],
+          currentUser: newUser,
+          currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
+        });
       },
 
       logout: () => {
@@ -253,7 +257,7 @@ export const useStore = create<AuthStore>()(
             ),
           };
         });
-        console.log("graph after delete", get().usersGraph.nodes);
+        // console.log("graph after delete", get().usersGraph.nodes);
 
         // set({
         //   isLoggedIn: "false",
@@ -270,6 +274,7 @@ export const useStore = create<AuthStore>()(
             tempFollowers = user.followers;
           }
         });
+        //unfollow
         if (tempFollowers.includes(get().currentUser?.username)) {
           const from = get().currentUser.username;
           set((state) => {
@@ -290,6 +295,7 @@ export const useStore = create<AuthStore>()(
               return user;
             }),
           });
+          //follow
         } else {
           const from = get().currentUser.username;
           set((state) => {
