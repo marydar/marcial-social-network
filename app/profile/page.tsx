@@ -38,8 +38,8 @@ export default function ProfilePage() {
   const [showFollowing, setShowFollowing] = useState(false);
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [editProfileData, setEditProfileData] = useState({
-    name: currentUser?.name || "",
-    avatar: currentUser?.avatar || ""
+    name: currentUser?.name,
+    avatar: currentUser?.avatar
   });
   const [followers, setFollowers] = useState<User[]>([]);
   const [followings, setFollowings] = useState<User[]>([]);
@@ -57,6 +57,8 @@ export default function ProfilePage() {
       router.push("./login")
     }
     if (currentUser){
+      editProfileData.name = currentUser?.name;
+      editProfileData.avatar = currentUser?.avatar;
       console.log("current user changed")
       let followings = users.filter((user: User) => {
         return user.followers.includes(currentUser?.username);
@@ -92,12 +94,14 @@ export default function ProfilePage() {
   };
 
   const handleUpdateProfile = () => {
+    console.log("edit name: ",editProfileData.name, " avatar: ", editProfileData.avatar);
     updateProfile(
       editProfileData.name,
       editProfileData.avatar
     );
+    
     setShowEditProfile(false);
-    setEditProfileData({ name: "", avatar: null });
+    setEditProfileData({ name: currentUser?.name, avatar:currentUser?.avatar});
     if (profileImageInputRef.current) {
       profileImageInputRef.current.value = "";
     }
@@ -114,6 +118,10 @@ export default function ProfilePage() {
     if (e.target.files && e.target.files[0]) {
       const fileUrl = URL.createObjectURL(e.target.files![0]);
       setEditProfileData(prev => ({ ...prev, avatar: fileUrl }));
+    }
+    else{
+      setEditProfileData(prev => ({ ...prev, avatar: currentUser?.avatar }));
+
     }
   };
 
@@ -240,7 +248,7 @@ export default function ProfilePage() {
                       </Button>
                       {editProfileData.avatar && (
                         <span className="text-sm text-muted-foreground">
-                          {editProfileData.avatar.name}
+                          {/* {editProfileData.name} */}
                         </span>
                       )}
                     </div>
@@ -288,9 +296,9 @@ export default function ProfilePage() {
               <ImagePlus className="h-4 w-4 mr-2" />
               Add Image
             </Button>
-            {newPost.imageFile && (
+            {newPost.image && (
               <span className="text-sm text-muted-foreground">
-                {newPost.imageFile.name}
+                {/* {newPost.message} */}
               </span>
             )}
             <Button onClick={handleCreatePost}>Post</Button>

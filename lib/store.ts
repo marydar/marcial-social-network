@@ -154,21 +154,32 @@ export const useStore = create<AuthStore>()(
       },
 
       signup: (username, password) => {
-        const newUser = {
-          username,
-          name: username,
-          password,
-          avatar:
-            "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
-          followers: [],
-          followings: [],
-          posts: [],
-        };
-        set({
-          isLoggedIn: "true",
-          currentUser: newUser,
-          users: [...get().users, newUser],
-        });
+        //check if username is not used by any user in users
+        if (!get().users.find((u) => u.username === username)){
+          const newUser = {
+            username,
+            name: username,
+            password,
+            avatar:
+              "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+            followers: [],
+            followings: [],
+            posts: [],
+          };
+          set({
+            isLoggedIn: "true",
+            currentUser: newUser,
+            users: [...get().users, newUser],
+          });
+        }
+        else{
+          set({
+            isLoggedIn: "false",
+            currentUser: null,
+            
+          });
+        }
+        
       },
 
       logout: () => {
@@ -324,6 +335,8 @@ export const useStore = create<AuthStore>()(
       },
 
       updateProfile: (name: string, avatar?: string) => {
+        console.log("update [rofile name: ",name, " avatar: ", avatar);
+        
         const temp = get().currentUser.username;
         set({
           currentUser: { ...get().currentUser, name, avatar },
