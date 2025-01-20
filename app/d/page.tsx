@@ -8,10 +8,10 @@ import Image from "next/image";
 import { User } from "@/lib/store";
 import { use, useEffect } from "react";
 export default function Page() {
-    const { currentUser, createPost, updateProfile, usersGraph, users, toggleFollow} = useStore();
-    useEffect(() => {
-        console.log(usersGraph);
-    }, [usersGraph]);
+    const { currentUser, createPost, updateProfile, toggleFollow} = useStore();
+    // useEffect(() => {
+    //     console.log(usersGraph);
+    // }, [usersGraph]);
   return (
     <>
       {/* <div className="text-2xl">username</div> */}

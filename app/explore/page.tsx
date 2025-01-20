@@ -32,15 +32,21 @@ export default function ExplorePage() {
 
   const doesFollow = (user: User) => {
     // if user is in current user's followings, return true
-
-    if (user.followers.includes(currentUser?.username)) return true;
+    
+    // console.log("does follow function");
+    if (user.followers.includes(currentUser?.username)) {
+      // console.log("does follow true", user.username);
+      return true;
+    }
+    // console.log("dose follow false", user);
+    
     // if user is in current user's followers, return false
     return false;
   };
   const handleFollow = (username: string) => {
     toggleFollow(username);
-    console.log(currentUser);
-    console.log(users.filter((user) => user.username === username));
+    // console.log(currentUser);
+    // console.log(users.filter((user) => user.username === username));
   };
 
   return (

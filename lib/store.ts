@@ -25,9 +25,7 @@ interface AuthStore {
   isLoggedIn: "true" | "false" | "loading";
   currentUser: User | null;
   users: User[];
-  currentSuggestions: string[];
   currentSuggestionsUsers: User[];
-  usersGraph: GraphMatrix;
   login: (username: string, password: string) => void;
   signup: (username: string, password: string) => void;
   logout: () => void;
@@ -38,18 +36,9 @@ interface AuthStore {
   deletePost: (postId: string) => void;
   editPost: (postId: string, message: string) => void;
   updateProfile: (name: string, avatar?: string) => void;
-  // getSuggestions: () => void;
+  getSuggestions: () => void;
 }
 
-// Helper function to convert File to base64
-const fileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-};
 
 export const useStore = create<AuthStore>()(
   persist(
@@ -57,8 +46,6 @@ export const useStore = create<AuthStore>()(
       isLoggedIn: "loading",
       currentUser: null,
       currentSuggestionsUsers: [],
-      currentSuggestions: [],
-      // usersGraph: new Graph(),
 
       users: [
         {
@@ -122,94 +109,48 @@ export const useStore = create<AuthStore>()(
           posts: [],
         },
       ],
-      usersGraph: (() => {
-        const graph = new GraphMatrix();
-        const initialUsers = [
-          {
-            username: "a",
-            name: "A",
-            password: "a",
-            avatar:
-              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-          {
-            username: "jane_smith",
-            name: "Jane Smith",
-            password: "password456",
-            avatar:
-              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-          {
-            username: "michael_brown",
-            name: "Michael Brown",
-            password: "password789",
-            avatar:
-              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-          {
-            username: "emily_jones",
-            name: "Emily Jones",
-            password: "password101",
-            avatar:
-              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-          {
-            username: "david_wilson",
-            name: "David Wilson",
-            password: "password202",
-            avatar:
-              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-          {
-            username: "sarah_davis",
-            name: "Sarah Davis",
-            password: "password303",
-            avatar:
-              "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
-            followers: [],
-            followings: [],
-            posts: [],
-          },
-        ];
-
-        initialUsers.forEach((user) => graph.addNode(user.username)); // Populate the graph
-        return graph;
-      })(),
-
-      login: (username, password) => {
-        set((state) => ({
-          currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
-          
-        }));
-
-        // console.log("suggs",get().currentSuggestions);
-        
-        set({
-          isLoggedIn: "true",
-          currentUser: get().users.find(
-            (u) => u.username === username && u.password === password
-          ),
-          
-          currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
-          // // if length of currentSuggestionsUsers is less than 7 add from users to currentSuggestionsUsers to become length 6 and add the users from currentsuggestions array
-          // currentSuggestionsUsers: get().currentSuggestionsUsers.length < 7 ? [...get().currentSuggestionsUsers, ...get().currentSuggestions.map((username) => get().users.find((u) => u.username === username))] : get().currentSuggestionsUsers,
-
+      getSuggestions: () => {
+        let graph  = new GraphMatrix();
+        // Add users to the graph
+        let users = get().users;
+        users.forEach((user) => {
+          graph.addNode(user.username);
         });
+        // Add edges between users
+        users.forEach((user) => {
+          user.followers.forEach((follower) => {
+            graph.addEdge(follower, user.username);
+          });
+        // suggest users based on the graph
+        let suggestedUsernames = graph.suggest(graph, get().currentUser.username);
+        let suggestedUsers = suggestedUsernames.map((username) => get().users.find((u) => u.username === username));
+        set({
+          currentSuggestionsUsers: suggestedUsers,
+        });
+        
+
+          
+        });
+      },
+      login: (username, password) => {
+        //check if user exists and password is correct
+        if (get().users.find((u) => u.username === username && u.password === password)) {
+          set({
+            isLoggedIn: "true",
+            currentUser: get().users.find(
+              (u) => u.username === username && u.password === password
+            ),
+            
+          });
+          get().getSuggestions();
+        } else {
+          set({
+            isLoggedIn: "false",
+            currentUser: null,
+            
+          });
+        }
+        
       },
 
       signup: (username, password) => {
@@ -223,25 +164,10 @@ export const useStore = create<AuthStore>()(
           followings: [],
           posts: [],
         };
-        // const name  = newUser.usernamey
-        set((state) => {
-          // set the usersgraph with all the users using addnode(username) and the new user
-          state.usersGraph.addNode(username);
-          get().usersGraph.printMatrix()
-          return {
-            // isLoggedIn: "true",
-            // currentUser: newUser,
-            // users: [...get().users, newUser],
-          };
-        });
-        set((state) => ({
-          currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
-        }));
         set({
           isLoggedIn: "true",
           currentUser: newUser,
           users: [...get().users, newUser],
-          currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
         });
       },
 
@@ -253,25 +179,12 @@ export const useStore = create<AuthStore>()(
       },
 
       deleteAccount: () => {
-        const temp = get().currentUser?.username;
-        set((state) => {
-          state.usersGraph.removeNode(temp);
 
-          return {
-            isLoggedIn: "false",
-            currentUser: null,
-            users: get().users.filter(
-              (u) => u.username !== get().currentUser?.username
-            ),
-          };
-        });
-        // console.log("graph after delete", get().usersGraph.nodes);
-
-        // set({
-        //   isLoggedIn: "false",
-        //   currentUser: null,
-        //   users: get().users.filter((u) => u.username !== get().currentUser?.username)
-        //  });
+        set({
+          isLoggedIn: "false",
+          currentUser: null,
+          users: get().users.filter((u) => u.username !== get().currentUser?.username)
+         });
       },
 
       toggleFollow: (username: string) => {
@@ -285,11 +198,6 @@ export const useStore = create<AuthStore>()(
         //unfollow
         if (tempFollowers.includes(get().currentUser?.username)) {
           const from = get().currentUser.username;
-          set((state) => {
-            state.usersGraph.removeEdge(from, username);
-            return {
-            };
-          });
           set({
             users: get().users.map((user) => {
               if (user.username === username) {
@@ -306,10 +214,6 @@ export const useStore = create<AuthStore>()(
           //follow
         } else {
           const from = get().currentUser.username;
-          set((state) => {
-            state.usersGraph.addEdge(from, username);
-            return {};
-          });
           //if current user is not following user with username add current user to that users followers list and add that user to current users following list
           set({
             users: get().users.map((user) => {
@@ -317,12 +221,14 @@ export const useStore = create<AuthStore>()(
                 return {
                   ...user,
                   followers: [...user.followers, get().currentUser?.username],
+                  
                 };
               }
               return user;
             }),
           });
         }
+        
       },
 
       createPost: (message, imageUrl) => {
@@ -432,14 +338,6 @@ export const useStore = create<AuthStore>()(
     }),
     {
       name: "instagram-store",
-      // partialize: (state) => {
-      //   const { usersGraph, ...rest } = state;
-      //   return rest;
-      // },
     }
-    // {
-    //   name: 'instagram-store',
-
-    // }
   )
 );
