@@ -134,6 +134,7 @@
         }
     }
     suggest(graph: GraphMatrix, myUsername: string): string[] {
+      this.printMatrix();
       let count = 0;
       if (!graph.adjacencyMatrix.has(myUsername)) {
           console.log(`${myUsername} does not exist in the graph.`);
@@ -159,16 +160,34 @@
               }
           });
 
+          console.log("this is in matrix : ", sum);
+          
           if (sum > 0) {
               const score = mutuals / sum;
-              if(score > 0 && score < 1 && count < 7){
+              if(score > 0 && score < 1 &&count < 6){
+                console.log("in matrix")
                   suggestions.push({ username, score });
                   count++;
               }
           }
       });
+        console.log("count1",count);
+        
+        if(count < 7){
+            const end = graph.adjacencyMatrix.keys().filter(key => !suggestions.map(s => s.username).includes(key));
+            end.forEach(key => {
+                if(count < 6) {
+                    console.log("in users all")
+                    suggestions.push({ username: key, score: 0 });
+                    count++;
+                }
+                // if(count === 6) return;
+            });
+            console.log("count12",count);
+        }
 
       suggestions.sort((a, b) => b.score - a.score);
+      console.log("-----suggestions------", suggestions);
 
       return suggestions.map(s => s.username);
   }

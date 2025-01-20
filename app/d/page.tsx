@@ -6,13 +6,17 @@ import { Card } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import { User } from "@/lib/store";
+import { use, useEffect } from "react";
 export default function Page() {
-    const { currentUser, createPost, updateProfile} = useStore();
+    const { currentUser, createPost, updateProfile, usersGraph, users, toggleFollow} = useStore();
+    useEffect(() => {
+        console.log(usersGraph);
+    }, [usersGraph]);
   return (
     <>
-      <div className="text-2xl">username</div>
+      {/* <div className="text-2xl">username</div> */}
       {/* currentUser.username */}
-      <div>{currentUser.username}</div>
+      {/* <div>{currentUser.username}</div>
       <div className="text-2xl">Posts</div>
       <ul>
         {currentUser.posts.map((post) => (
@@ -36,7 +40,8 @@ export default function Page() {
         }
       }>
         new username 
-      </button>
+      </button> */}
+
     </>
   );
 }

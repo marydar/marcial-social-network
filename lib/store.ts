@@ -194,9 +194,10 @@ export const useStore = create<AuthStore>()(
       login: (username, password) => {
         set((state) => ({
           currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
+          
         }));
 
-        console.log("suggs",get().currentSuggestions);
+        // console.log("suggs",get().currentSuggestions);
         
         set({
           isLoggedIn: "true",
@@ -204,7 +205,7 @@ export const useStore = create<AuthStore>()(
             (u) => u.username === username && u.password === password
           ),
           
-          // currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
+          currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
           // // if length of currentSuggestionsUsers is less than 7 add from users to currentSuggestionsUsers to become length 6 and add the users from currentsuggestions array
           // currentSuggestionsUsers: get().currentSuggestionsUsers.length < 7 ? [...get().currentSuggestionsUsers, ...get().currentSuggestions.map((username) => get().users.find((u) => u.username === username))] : get().currentSuggestionsUsers,
 
@@ -222,17 +223,24 @@ export const useStore = create<AuthStore>()(
           followings: [],
           posts: [],
         };
+        // const name  = newUser.usernamey
         set((state) => {
-          state.usersGraph.addNode(newUser.username);
-          return {};
+          // set the usersgraph with all the users using addnode(username) and the new user
+          state.usersGraph.addNode(username);
+          get().usersGraph.printMatrix()
+          return {
+            // isLoggedIn: "true",
+            // currentUser: newUser,
+            // users: [...get().users, newUser],
+          };
         });
         set((state) => ({
           currentSuggestions: state.usersGraph.suggest(state.usersGraph, username),
         }));
         set({
           isLoggedIn: "true",
-          users: [...get().users, newUser],
           currentUser: newUser,
+          users: [...get().users, newUser],
           currentSuggestionsUsers: get().currentSuggestions.map((username) => get().users.find((u) => u.username === username)),
         });
       },
@@ -424,10 +432,10 @@ export const useStore = create<AuthStore>()(
     }),
     {
       name: "instagram-store",
-      partialize: (state) => {
-        const { usersGraph, ...rest } = state;
-        return rest;
-      },
+      // partialize: (state) => {
+      //   const { usersGraph, ...rest } = state;
+      //   return rest;
+      // },
     }
     // {
     //   name: 'instagram-store',
