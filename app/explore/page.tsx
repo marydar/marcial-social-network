@@ -94,6 +94,7 @@ export default function ExplorePage() {
         <div className="space-y-4">
           {followings.map((user: User) => (
             <Card key={user.username} className="p-4">
+              <a className="cursor-pointer" href={`/users/${user.username}`}>
               <div className="flex items-center space-x-4">
                 <div className="relative w-12 h-12">
                   <Image
@@ -110,11 +111,16 @@ export default function ExplorePage() {
                 </div>
                 <Button
                   variant="outline"
-                  onClick={() => handleFollow(user.username)}
+                  onClick={(e) => {
+                    e.stopPropagation(); 
+                    e.preventDefault(); 
+                    handleFollow(user.username)
+                  }}
                 >
                   Following
                 </Button>
               </div>
+              </a>
             </Card>
           ))}
           {followings.length === 0 && (
