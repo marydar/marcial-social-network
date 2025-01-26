@@ -59,6 +59,36 @@ export const useStore = create<AuthStore>()(
           posts: [],
         },
         {
+          username: "b",
+          name: "B",
+          password: "b",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
+        },
+        {
+          username: "c",
+          name: "C",
+          password: "c",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
+        },
+        {
+          username: "d",
+          name: "D",
+          password: "d",
+          avatar:
+            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          followers: [],
+          followings: [],
+          posts: [],
+        },
+        {
           username: "jane_smith",
           name: "Jane Smith",
           password: "password456",
