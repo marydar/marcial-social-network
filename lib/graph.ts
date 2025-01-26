@@ -149,47 +149,50 @@
 
           let mutuals = 0;
           let sum = 0;
-
-          row.forEach((value, key) => {
-              const myValue = myRow.get(key) || 0;
-              if (value === 1 && myValue === 1) {
-                  mutuals++;
-              }
-              if (value === 1 || myValue === 1) {
-                  sum++;
-              }
-          });
-
-          console.log("this is in matrix : ", sum);
-          
-          if (sum > 0) {
-              const score = mutuals / sum;
-              if(score > 0 && score < 1 &&count < 6){
-                console.log("in matrix")
-                  suggestions.push({ username, score });
-                  count++;
-              }
+          //if not foolowed by current user
+          if ( this.adjacencyMatrix.get(myUsername).get(username) === 0){
+            // calculate score
+            row.forEach((value, key) => {
+                const myValue = myRow.get(key) || 0;
+                if (value === 1 && myValue === 1) {
+                    mutuals++;
+                }
+                if (value === 1 || myValue === 1) {
+                    sum++;
+                }
+            });
+            if (sum > 0) {
+                const score = mutuals / sum;
+                if(score > 0 && score < 1){
+                    if( username !== myUsername){
+                      suggestions.push({ username, score });
+                      count++;
+                    }
+                }
+            }
           }
+          
       });
-        console.log("count1",count);
         
         if(count < 7){
-            const end = graph.adjacencyMatrix.keys().filter(key => !suggestions.map(s => s.username).includes(key));
+            //new users and not followed by current user
+            const end = graph.adjacencyMatrix.keys().filter(key => !suggestions.map(s => s.username).includes(key) && this.adjacencyMatrix.get(myUsername).get(key) === 0);
             end.forEach(key => {
                 if(count < 6) {
-                    console.log("in users all")
-                    suggestions.push({ username: key, score: 0 });
-                    count++;
+                    if( key !== myUsername){
+                        suggestions.push({ username: key, score: 0 });
+                        count++;
+                    }
+
                 }
-                // if(count === 6) return;
             });
             console.log("count12",count);
         }
 
       suggestions.sort((a, b) => b.score - a.score);
       console.log("-----suggestions------", suggestions);
-
-      return suggestions.map(s => s.username);
+      //only return the top 6 suggestions
+      return suggestions.slice(0, 6).map(s => s.username);
   }
 }
 

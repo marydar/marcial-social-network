@@ -171,6 +171,7 @@ export const useStore = create<AuthStore>()(
             currentUser: newUser,
             users: [...get().users, newUser],
           });
+          get().getSuggestions();
         }
         else{
           set({
@@ -239,7 +240,7 @@ export const useStore = create<AuthStore>()(
             }),
           });
         }
-        
+        get().getSuggestions();
       },
 
       createPost: (message, imageUrl) => {
