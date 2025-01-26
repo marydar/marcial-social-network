@@ -53,7 +53,7 @@ export const useStore = create<AuthStore>()(
           name: "A",
           password: "a",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -63,7 +63,7 @@ export const useStore = create<AuthStore>()(
           name: "B",
           password: "b",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -73,7 +73,7 @@ export const useStore = create<AuthStore>()(
           name: "C",
           password: "c",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -83,7 +83,7 @@ export const useStore = create<AuthStore>()(
           name: "D",
           password: "d",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -113,7 +113,7 @@ export const useStore = create<AuthStore>()(
           name: "Emily Jones",
           password: "password101",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -133,7 +133,7 @@ export const useStore = create<AuthStore>()(
           name: "Sarah Davis",
           password: "password303",
           avatar:
-            "https://images.unsplash.com/photo-1506801127834-3a3e1c1c1c1c?w=150&h=150&fit=crop",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
           followers: [],
           followings: [],
           posts: [],
@@ -191,7 +191,7 @@ export const useStore = create<AuthStore>()(
             name: username,
             password,
             avatar:
-              "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop",
+              "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&h=150&fit=crop",
             followers: [],
             followings: [],
             posts: [],
