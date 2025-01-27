@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import Link from "next/link";
+import { toast, Toaster } from "react-hot-toast";
+// import { ToastContainer, toast } from 'react-toastify';
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -21,12 +23,30 @@ export default function LoginPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(username, password);
+    let result = login(username, password);
+    if (result === false) {
+      console.log("login failed");
+      handleError();
+    }
     router.push("/explore");
+  };
+  const handleError = () => {
+    toast.error("enter correct username and password", {
+      style: {
+        border: "1px solid #f87171",
+        padding: "16px",
+        color: "#7f1d1d",
+      },
+      iconTheme: {
+        primary: "#f87171",
+        secondary: "#f9fafb",
+      },
+    });
   };
 
   return (
     <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
+      <Toaster position="top-center" reverseOrder={false} />
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <h1 className="text-2xl font-bold">Login</h1>
@@ -53,7 +73,7 @@ export default function LoginPage() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" >
               Login
             </Button>
             <p className="text-sm text-center">

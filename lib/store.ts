@@ -26,8 +26,8 @@ interface AuthStore {
   currentUser: User | null;
   users: User[];
   currentSuggestionsUsers: User[];
-  login: (username: string, password: string) => void;
-  signup: (username: string, password: string) => void;
+  login: (username: string, password: string) => boolean;
+  signup: (username: string, password: string) => boolean;
   logout: () => void;
   deleteAccount: () => void;
   toggleFollow: (userId: string) => void;
@@ -173,12 +173,14 @@ export const useStore = create<AuthStore>()(
             
           });
           get().getSuggestions();
+          return true;
         } else {
           set({
             isLoggedIn: "false",
             currentUser: null,
             
           });
+          return false;
         }
         
       },
@@ -202,6 +204,7 @@ export const useStore = create<AuthStore>()(
             users: [...get().users, newUser],
           });
           get().getSuggestions();
+          return true;
         }
         else{
           set({
@@ -209,6 +212,7 @@ export const useStore = create<AuthStore>()(
             currentUser: null,
             
           });
+          return false;
         }
         
       },

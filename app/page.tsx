@@ -1,5 +1,6 @@
 "use client"
 import { useRouter } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const router = useRouter();
@@ -13,7 +14,7 @@ export default function Home() {
         textAlign: 'center',
       }}
     >
-      loading...
+    loading...
     </div>
   );
 }

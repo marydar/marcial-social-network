@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Pencil, Trash2, ImagePlus, Camera } from "lucide-react";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ProfilePage() {
   const { 
@@ -84,6 +85,19 @@ export default function ProfilePage() {
         postImageInputRef.current.value = "";
       }
     }
+    else{
+      toast.error("please enter a message", {
+        style: {
+          border: "1px solid #f87171",
+          padding: "16px",
+          color: "#7f1d1d",
+        },
+        iconTheme: {
+          primary: "#f87171",
+          secondary: "#f9fafb",
+        },
+      });
+    }
   };
 
   const handleEditPost = () => {
@@ -131,6 +145,7 @@ export default function ProfilePage() {
   
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-8">
+      <Toaster position="top-center" reverseOrder={false} />
       <Card className="p-8">
         <div className="flex flex-col items-center space-y-4">
           <div className="relative w-32 h-32">
