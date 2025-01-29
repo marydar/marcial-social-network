@@ -60,7 +60,7 @@ export default function ExplorePage() {
                 key={user.username}
                 className="flex flex-col items-center space-y-2 w-24"
               >
-                <a className="cursor-pointer" href={`/users/${user.username}`}>
+                {/* <a className="cursor-pointer" href={`/users/${user.username}`}> */}
                   <div className="relative w-20 h-20">
                     <Image
                       src={user.avatar}
@@ -74,7 +74,7 @@ export default function ExplorePage() {
                   <p className="text-sm font-medium truncate w-full text-center">
                     {user.username}
                   </p>
-                </a>
+                {/* </a> */}
                 <Button
                   variant={doesFollow(user) ? "outline" : "default"}
                   className="w-full"
