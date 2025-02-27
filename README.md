@@ -1,19 +1,75 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Vm4P_RCy)
+# Social Network App
 
-- github-repository : https://github.com/marydar/mar-social-network
- ##
+## Overview
+This is a social networking application built with Next.js, React, Tailwind CSS, and Zustand for state management. The project includes various features such as user authentication, profile management, posting functionality, and a recommendation system implemented using graph data structures.
 
-  
-# پروژه پایانی: شبکه اجتماعی (Social Network)
-شبکه های اجتماعی یکی از ابزار های پر استفاده در جامعه هست و در اینجا از شما میخواهیم که شبکه اجتتماعی خودتون را بسازید.
+## Features
 
-# منابع آموزشی گیت و گیت‌هاب
-- [آموزش گیت (Git)، گیت هاب و گیت لب - فرادرس (جادی میرمیرانی)](https://faradars.org/courses/fvgit9609-git-github-gitlab)
-- [۲۰ دستور پراستفاده در گیت به همراه مثال](https://dzone.com/articles/top-20-git-commands-with-examples)
-- [آموزش کاربردی Git](https://gotoclass.ir/courses/git/)
-- [چیت‌شیت گیت کوئرا](https://quera.org/college/cheatsheet/git)
+### Authentication
+- User login and signup functionality.
 
-# نکات مهم
-- استفاده از گیت و گیت‌هاب در انجام پروژه **اجباری** است.
-- تاریخ ارائه شفاهی، متعاقباً اطلاع‌رسانی می‌شود.
-- مهلت ارسال پروژه: 5 بهمن 1403
+### Explore Page
+- **Suggested Users**: Users are recommended using a graph-based suggestion system implemented with a matrix.
+- **Following**: Displays the list of users the logged-in user follows.
+
+### Profile Page
+- **User Information**: Displays avatar, username, and name.
+- **Edit Profile**: Users can change their avatar and name.
+- **Followings & Followers**: Users can see lists of people they follow and their followers.
+- **Post Creation**: Allows users to select an image, add a message, and post it.
+- **Posts Section**: Users can create, edit, and delete their posts.
+- **Delete Account**: Users can delete their account.
+
+### Viewing Other Users
+- Clicking on a followed user navigates to their profile.
+- Displays their avatar, name, username, followers, followings, and posts.
+
+### Dark and Light Theme
+- Users can toggle between dark and light mode.
+
+## Tech Stack
+- **Frontend:** Next.js, React, Tailwind CSS
+- **State Management:** Zustand
+- **Data Structure:** Graph implementation using a matrix
+
+## Installation & Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/your-repo/social-network-app.git
+   ```
+2. Navigate to the project directory:
+   ```sh
+   cd social-network-app
+   ```
+3. Install dependencies:
+   ```sh
+   npm install
+   ```
+4. Start the development server:
+   ```sh
+   npm run dev
+   ```
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Deployment
+The project is deployed on **Vercel**. You can access it here:
+[Live Demo](https://react-music-player-steel.vercel.app/)
+
+## Screenshot
+### login
+![login](screenshots/login.png)
+### explore
+![explore](screenshots/explore.png)
+### userprofile account information
+![userprofile-acc](screenshots/userprofile-acc.png)
+### userprofile followings
+![userprofile-followings](screenshots/userprofile-followings.png)
+### userprofile posts
+![userprofile-posts](screenshots/userprofile-posts.png)
+### other users profile
+![other user profile](screenshots/profile2.png)
+
+---
+## Author
+[MaryamDar](https://github.com/marydar)
+
